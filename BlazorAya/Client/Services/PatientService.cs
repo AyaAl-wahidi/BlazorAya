@@ -17,7 +17,7 @@ public class PatientService
 
     public async Task<Patients> GetPatientByIdAsync(int id)
     {
-        return await _httpClient.GetFromJsonAsync<Patients>($"api/patients/{id}");
+        return await _httpClient.GetFromJsonAsync<Patients>($"api/patients/{id}");      
     }
 
     public async Task<Patients> AddPatientAsync(Patients patient)

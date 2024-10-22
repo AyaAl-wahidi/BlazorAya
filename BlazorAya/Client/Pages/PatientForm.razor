@@ -13,23 +13,22 @@
 
     <div class="form-group">
         <label for="name">Name:</label>
-        <InputText id="name" @bind-Value="patient.Name" class="form-control" />
+        <InputText id="Name" @bind-Value="patient.Name" class="form-control" />
     </div>
 
     <div class="form-group">
         <label for="address">Address:</label>
-        <InputText id="address" @bind-Value="patient.Address" class="form-control" />
+        <InputText id="Address" @bind-Value="patient.Address" class="form-control" />
     </div>
 
     <div class="form-group">
         <label for="dob">Date of Birth:</label>
-        <InputDate id="dob" @bind-Value="patient.DateOfBirth" class="form-control" />
+        <InputDate id="DateOfBirth" @bind-Value="patient.DateOfBirth" class="form-control" />
     </div>
 
     <div>
-        <button type="submit" class="btn btn-primary">@("Submit")</button>
-        <button type="button" class="btn btn-secondary" @onclick="GoBack">Back</button>
-
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-secondary" @onclick="GoBack">Back</button> <!-- Back button -->
     </div>
 </EditForm>
 
@@ -43,6 +42,7 @@
         if (id != 0)
         {
             patient = await PatientService.GetPatientByIdAsync(id);
+            Console.WriteLine($"Patient fetched: {patient?.Name}, {patient?.Address}, {patient?.DateOfBirth}");
         }
     }
 
@@ -62,6 +62,6 @@
 
     private void GoBack()
     {
-        NavigationManager.NavigateTo("/patients");
+        NavigationManager.NavigateTo("/patients"); // Navigates back to patients list
     }
 }

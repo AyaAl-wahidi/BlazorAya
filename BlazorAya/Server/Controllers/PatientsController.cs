@@ -30,6 +30,26 @@ namespace BlazorAya.Server.Controllers
             }
         }
 
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
+        {
+            try
+            {
+                var patient = _patientContext.Select().Where(m => m.Eq(f => f.Id, id)).Execute().FirstOrDefault();
+
+                if (patient == null)
+                {
+                    return NotFound($"Patient with id {id} not found.");
+                }
+
+                return Ok(patient);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
         // POST: api/courses
         [HttpPost]
         public IActionResult Add([FromBody] Patients course)
