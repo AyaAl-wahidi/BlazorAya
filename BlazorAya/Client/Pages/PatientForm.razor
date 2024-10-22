@@ -1,0 +1,67 @@
+﻿@page "/patients/add"
+@page "/patients/edit/{id:int}"
+
+@inject PatientService PatientService
+@inject NavigationManager NavigationManager
+@using BlazorAya.Shared
+
+<h3>@(id == 0 ? "Add Patient" : "Edit Patient")</h3>
+
+<EditForm Model="patient" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <InputText id="name" @bind-Value="patient.Name" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="address">Address:</label>
+        <InputText id="address" @bind-Value="patient.Address" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="dob">Date of Birth:</label>
+        <InputDate id="dob" @bind-Value="patient.DateOfBirth" class="form-control" />
+    </div>
+
+    <div>
+        <button type="submit" class="btn btn-primary">@("Submit")</button>
+        <button type="button" class="btn btn-secondary" @onclick="GoBack">Back</button>
+
+    </div>
+</EditForm>
+
+@code {
+    [Parameter] public int id { get; set; }
+
+    private Patients patient = new Patients();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (id != 0)
+        {
+            patient = await PatientService.GetPatientByIdAsync(id);
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (id == 0)
+        {
+            await PatientService.AddPatientAsync(patient);
+        }
+        else
+        {
+            await PatientService.UpdatePatientAsync(id, patient);
+        }
+
+        NavigationManager.NavigateTo("/patients");
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo("/patients");
+    }
+}

@@ -1,0 +1,65 @@
+﻿@page "/patients"
+@inject PatientService PatientService
+@inject NavigationManager NavigationManager
+@using BlazorAya.Shared
+
+<h3>Patients</h3>
+
+<button @onclick="AddNewPatient">Add New Patient</button>
+
+@if (patients == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Date of Birth</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var patient in patients)
+            {
+                <tr>
+                    <td>@patient.Name</td>
+                    <td>@patient.Address</td>
+                    <td>@(patient.DateOfBirth.HasValue ? patient.DateOfBirth.Value.ToString("yyyy-MM-dd") : "No Data")</td>
+                    <td>
+                        <button @onclick="() => EditPatient(patient.Id)">Edit</button>
+                        <button @onclick="() => DeletePatient(patient.Id)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Patients> patients;
+
+    protected override async Task OnInitializedAsync()
+    {
+        patients = await PatientService.GetAllPatientsAsync();
+    }
+
+    private void AddNewPatient()
+    {
+        NavigationManager.NavigateTo("/patients/add");
+    }
+
+    private void EditPatient(int id)
+    {
+        NavigationManager.NavigateTo($"/patients/edit/{id}");
+    }
+
+    private async Task DeletePatient(int id)
+    {
+        await PatientService.DeletePatientAsync(id);
+        patients = await PatientService.GetAllPatientsAsync();
+    }
+}
